@@ -22,13 +22,7 @@ class DialogManager {
       `${__dirname}/dialogs/${label}.${this.config.adapter}`,
       `${__dirname}/dialogs/${label}`,
     ];
-    for (const path of paths) {
-      // console.log('DialogManager.getDialogPath: path', path);
-      if (fs.existsSync(`${path}.js`)) {
-        return path;
-      }
-    }
-    return null;
+    return paths.map(p => `${p}.js`).find(fs.existsSync) || null;
   }
 
   getDialog(dialog) {

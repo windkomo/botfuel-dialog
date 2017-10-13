@@ -9,7 +9,7 @@ class CorpusExtractor {
    */
   constructor(parameters) {
     this.dimension = parameters.dimension;
-    this.corpus = parameters.corpus;
+    this.corpus = new parameters.corpus(this.constructor.name.slice(0, -"Extractor".length), parameters.directory);
     this.options = parameters.options;
   }
 
