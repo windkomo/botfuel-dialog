@@ -3,6 +3,7 @@ const Classifier = require('./classifier');
 const CorpusExtractor = require('./extractors/corpus_extractor');
 const Dialog = require('./dialogs/dialog');
 const DialogManager = require('./dialog_manager');
+const FileCorpus = require('./corpora/file_corpus');
 const MemoryBrain = require('./brains/memory_brain');
 const MongoBrain = require('./brains/mongo_brain');
 const Messages = require('./messages');
@@ -17,6 +18,7 @@ module.exports = {
   CorpusExtractor,
   Dialog,
   DialogManager,
+  FileCorpus,
   MemoryBrain,
   MongoBrain,
   Messages,
