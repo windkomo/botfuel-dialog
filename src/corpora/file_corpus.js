@@ -6,14 +6,15 @@ class FileCorpus extends Corpus {
     super();
     this.path = path;
     this.separator = separator;
+    this.init();
   }
 
-  async init() {
+  init() {
     this.matrix = fs
       .readFileSync(this.path, 'utf8') // TODO: async?
       .toString()
       .split('\n')
-      .slice(0, -1) // remove last empty line
+      .filter(Boolean) // remove any empty line
       .map(row => row.split(this.separator));
   }
 }
