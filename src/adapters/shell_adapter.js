@@ -13,12 +13,12 @@ class ShellAdapter extends Adapter {
   }
 
   async run() {
-    console.log('ShellAdapter.run');
+    console.warn('ShellAdapter.run');
     await this.bot.brain.initUserIfNecessary(this.userId);
     const botMessage = new BotTextMessage(this.config.id, this.userId, 'onboarding').toJson();
     let userInput = await this.send([botMessage]);
     for (;;) {
-      console.log('ShellAdapter.run', userInput);
+      console.warn('ShellAdapter.run', userInput);
       const userMessage = new UserTextMessage(
         this.config.id,
         this.userId,
@@ -30,9 +30,9 @@ class ShellAdapter extends Adapter {
   }
 
   async send(botMessages) {
-    console.log('ShellAdapter.send', botMessages);
+    console.warn('ShellAdapter.send', botMessages);
     // TODO: adapt to msg type
-    const message = botMessages.map(botMessage => botMessage.payload.value).join(' ');
+    const message = botMessages.map(botMessage => botMessage.payload.value).join('\n');
     // type text
     return inquirer.prompt([
       {

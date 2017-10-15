@@ -11,7 +11,7 @@ const TestAdapter = require('./adapters/test_adapter');
  */
 class Bot {
   constructor(config) {
-    console.log('Bot.constructor', config);
+    console.warn('Bot.constructor', config);
     switch (config.adapter) {
       case 'botfuel':
         this.adapter = new BotfuelAdapter(this, config);
@@ -32,13 +32,13 @@ class Bot {
   }
 
   async run() {
-    console.log('Bot.run');
+    console.warn('Bot.run');
     await this.init();
     return this.adapter.run();
   }
 
   async play(userMessages) {
-    console.log('Bot.play', userMessages);
+    console.warn('Bot.play', userMessages);
     await this.init();
     return this.adapter.play(userMessages);
   }
@@ -52,7 +52,7 @@ class Bot {
    * Responds.
    */
   async sendResponse(userMessage) {
-    console.log('Bot.sendResponse', userMessage);
+    console.warn('Bot.sendResponse', userMessage);
     try {
       return this.adapter.send(await this.getResponses(userMessage));
     } catch (err) {
@@ -62,7 +62,7 @@ class Bot {
   }
 
   async getResponses(userMessage) {
-    // console.log('Bot.getResponses', userMessage);
+    // console.warn('Bot.getResponses', userMessage);
     switch (userMessage.type) {
       case 'postback':
         return this.getResponsesWhenPostback(userMessage);
@@ -75,24 +75,24 @@ class Bot {
   }
 
   async getResponsesWhenPostback(userMessage) {
-    console.log('Bot.getResponsesWhenPostback', userMessage);
+    console.warn('Bot.getResponsesWhenPostback', userMessage);
     const { dialog, entities } = userMessage.payload.value;
-    console.log('Bot.getResponsesWhenPostback: dialog, entities', dialog, entities);
+    console.warn('Bot.getResponsesWhenPostback: dialog, entities', dialog, entities);
     return this.dm.executeDialogs(userMessage.user, [dialog], entities);
   }
 
   async getResponsesWhenText(userMessage) {
-    console.log('Bot.getResponsesWhenText', userMessage);
+    console.warn('Bot.getResponsesWhenText', userMessage);
     const { intents, entities } = await this.nlu.compute(userMessage.payload.value);
-    console.log('Bot.getResponsesWhenText: intents, entities', intents, entities);
+    console.warn('Bot.getResponsesWhenText: intents, entities', intents, entities);
     return this.dm.execute(userMessage.user, intents, entities);
   }
 
   async getResponsesWhenDownload(userMessage) { // TODO: rename
-    console.log('Bot.getResponsesWhenDownload', userMessage);
+    console.warn('Bot.getResponsesWhenDownload', userMessage);
     const entities = [{ url: userMessage.payload.value.url }];
     const dialog = { label: 'image' };
-    console.log('Bot.getResponsesWhenPostback: dialog, entities', dialog, entities);
+    console.warn('Bot.getResponsesWhenPostback: dialog, entities', dialog, entities);
     return this.dm.executeDialogs(userMessage.user, [dialog], entities);
   }
 }

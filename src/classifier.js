@@ -9,7 +9,7 @@ class Classifier {
    * @param {Object} config the bot's config
    */
   constructor(config) {
-    console.log('Classifier.constructor', config);
+    console.warn('Classifier.constructor', config);
     this.locale = config.locale;
     this.modelFilename = `${config.path}/models/model.json`;
     this.intentDirname = `${config.path}/src/data/intents`;
@@ -28,7 +28,7 @@ class Classifier {
   }
 
   async init() {
-    console.log('Classifier.init');
+    console.warn('Classifier.init');
     return new Promise((resolve, reject) => {
       Natural
         .LogisticRegressionClassifier
@@ -52,37 +52,37 @@ class Classifier {
    * @return {Promise} a promise with entities and intents
    */
   async compute(sentence, entities) {
-    console.log('Classifier.compute', sentence, entities);
+    console.warn('Classifier.compute', sentence, entities);
     const features = this.computeFeatures(sentence, entities);
     return this.classifier.getClassifications(features);
   }
 
   async train() {
-    console.log('Classifier.train');
+    console.warn('Classifier.train');
     this.classifier = new Natural.LogisticRegressionClassifier(this.getStemmer());
     Fs
       .readdirSync(this.intentDirname, 'utf8')
       .filter(fileName => fileName.substr(-INTENT_SUFFIX.length) === INTENT_SUFFIX)
       .map((fileName) => {
-        console.log('Classifier.train: filename', fileName);
+        console.warn('Classifier.train: filename', fileName);
         const intent = fileName.substring(0, fileName.length - INTENT_SUFFIX.length);
-        console.log('Classifier.train: intent', intent);
+        console.warn('Classifier.train: intent', intent);
         return Fs
           .readFileSync(`${this.intentDirname}/${fileName}`, 'utf8')
           .toString()
           .split('\n')
           .map((line) => {
-            console.log('Classifier.train: line', line);
+            console.warn('Classifier.train: line', line);
             const features = this.computeFeatures(line, null); // TODO: compute also entities
-            console.log('Classifier.train: features', features);
+            console.warn('Classifier.train: features', features);
             return this.classifier.addDocument(features, intent);
           });
       });
-    console.log('Classifier.train: training');
+    console.warn('Classifier.train: training');
     this.classifier.train();
-    console.log('Classifier.train: trained');
+    console.warn('Classifier.train: trained');
     this.classifier.save(this.modelFilename);
-    console.log('Classifier.train: saved');
+    console.warn('Classifier.train: saved');
   }
 }
 

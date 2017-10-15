@@ -11,7 +11,7 @@ class DirectoryEntityExtractor extends CompositeEntityExtractor {
    * @param {Object} path - the bot's config
    */
   constructor(path) {
-    console.log('DirectoryEntityExtractor.constructor', path);
+    console.warn('DirectoryEntityExtractor.constructor', path);
     let files = [];
     if (fs.existsSync(path)) {
       files = dir.files(path, { sync: true }) || files;

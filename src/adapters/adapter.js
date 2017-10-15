@@ -3,18 +3,18 @@
  */
 class Adapter {
   constructor(bot, config) {
-    console.log('Adapter.constructor', '<bot>', config);
+    console.warn('Adapter.constructor', '<bot>', config);
     this.config = config;
     this.bot = bot;
   }
 
   async play(userMsgs) {
-    console.log('Adapter.play', userMsgs);
+    console.warn('Adapter.play', userMsgs);
     throw new Error('Not implemented!');
   }
 
   async run() {
-    console.log('Adapter.run');
+    console.warn('Adapter.run');
     throw new Error('Not implemented!');
   }
 
@@ -23,7 +23,7 @@ class Adapter {
    * @returns {Promise}
    */
   async send(botMessages) {
-    console.log('Adapter.send', botMessages);
+    console.warn('Adapter.send', botMessages);
     throw new Error('Not implemented!');
   }
 }

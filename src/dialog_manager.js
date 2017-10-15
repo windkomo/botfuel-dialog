@@ -8,14 +8,14 @@ class DialogManager {
    * Constructor.
    */
   constructor(brain, config) {
-    // console.log('DialogManager.constructor');
+    // console.warn('DialogManager.constructor');
     this.brain = brain;
     this.config = config;
     this.intentThreshold = this.config.intentThreshold || 0.8;
   }
 
   getDialogPath(label) {
-    // console.log('DialogManager.getDialogPath', label);
+    // console.warn('DialogManager.getDialogPath', label);
     const paths = [
       `${this.config.path}/src/controllers/dialogs/${label}.${this.config.adapter}`,
       `${this.config.path}/src/controllers/dialogs/${label}`,
@@ -26,7 +26,7 @@ class DialogManager {
   }
 
   getDialog(dialog) {
-    // console.log('DialogManager.getDialog', dialog);
+    // console.warn('DialogManager.getDialog', dialog);
     const path = this.getDialogPath(dialog.label);
     if (path === null) {
       return null;
@@ -43,7 +43,7 @@ class DialogManager {
    * @param {Object[]} entities - the entities
    */
   async updateDialogs(userId, dialogs, intents, entities) {
-    console.log('DialogManager.updateDialogs', userId, dialogs, intents, entities);
+    console.warn('DialogManager.updateDialogs', userId, dialogs, intents, entities);
     intents = intents
       .filter(intent => intent.value > this.intentThreshold)
       .slice(0, 2)
@@ -55,7 +55,7 @@ class DialogManager {
         }
         return intent1.value - intent2.value;
       });
-    console.log('DialogManager.updateDialogs: intents', intents);
+    console.warn('DialogManager.updateDialogs: intents', intents);
     for (let i = 0; i < intents.length; i++) {
       const label = intents[i].label;
       if (dialogs.length === 0 || dialogs[dialogs.length - 1].label !== label) {
@@ -87,23 +87,23 @@ class DialogManager {
    * @param {Object[]} entities - the entities
    */
   async executeDialogs(userId, dialogs, entities) {
-    console.log('DialogManager.executeDialogs', userId, dialogs, entities);
+    console.warn('DialogManager.executeDialogs', userId, dialogs, entities);
     const responses = [];
     const user = await this.brain.getUser(userId);
-    console.log('DialogManager.executeDialogs: user', user);
+    console.warn('DialogManager.executeDialogs: user', user);
     let done = true;
     while (done && dialogs.length > 0) {
       const dialog = dialogs[dialogs.length - 1];
-      console.log('DialogManager.executeDialogs: dialog', dialog);
+      console.warn('DialogManager.executeDialogs: dialog', dialog);
       // eslint-disable-next-line no-await-in-loop
       await this.brain.userSet(userId, 'lastDialog', dialog);
       // eslint-disable-next-line no-await-in-loop
       done = await this
         .getDialog(dialog)
         .execute(userId, responses, entities, dialog.order !== 0);
-      console.log('DialogManager.executeDialogs: done', done);
       if (done) {
         dialogs = dialogs.slice(0, -1);
+      console.warn('DialogManager.executeDialogs: done', done);
       }
     }
     await this.brain.userSet(userId, 'dialogs', dialogs);
@@ -117,7 +117,7 @@ class DialogManager {
    * @param {Object[]} entities the transient entities
    */
   async execute(userId, intents, entities) {
-    console.log('DialogManager.execute', userId, intents, entities);
+    console.warn('DialogManager.execute', userId, intents, entities);
     const dialogs = await this.brain.userGet(userId, 'dialogs');
     await this.updateDialogs(userId, dialogs, intents, entities);
     return this.executeDialogs(userId, dialogs, entities);

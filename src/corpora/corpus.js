@@ -6,7 +6,7 @@ class Corpus {
   }
 
   static normalize(sentence, options) {
-    // console.log('Corpus.normalize', sentence, options);
+    // console.warn('Corpus.normalize', sentence, options);
     if (options === undefined || options.caseSensitive !== true) {
       sentence = sentence.toLowerCase();
     }
@@ -23,12 +23,12 @@ class Corpus {
   }
 
   static matches(key, word, options) {
-    // console.log('Corpus.matches', key, word, options);
+    // console.warn('Corpus.matches', key, word, options);
     return Corpus.normalize(key, options) === Corpus.normalize(word, options);
   }
 
   getValue(key, options) {
-    // console.log('Corpus.getValue', key, options);
+    // console.warn('Corpus.getValue', key, options);
     for (const row of this.matrix) {
       for (const word of row) {
         if (Corpus.matches(key, word, options)) {

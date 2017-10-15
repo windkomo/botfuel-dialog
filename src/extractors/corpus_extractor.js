@@ -17,13 +17,13 @@ class CorpusExtractor {
    * @param {string} sentence the sentence
    */
   async compute(sentence) {
-    console.log('CorpusExtractor.compute', sentence);
+    console.warn('CorpusExtractor.compute', sentence);
     const normalizedSentence = Corpus.normalize(sentence, this.options);
     return this.computeEntities(normalizedSentence, this.corpus.getWords(), []);
   }
 
   getRemainder(sentence, word) {
-    console.log('CorpusExtractor.getRemainder', sentence, word);
+    console.warn('CorpusExtractor.getRemainder', sentence, word);
     const startIndex = sentence.indexOf(word);
     if (startIndex < 0) {
       return null;
@@ -43,7 +43,7 @@ class CorpusExtractor {
   }
 
   computeEntities(sentence, words, entities) {
-    console.log('CorpusExtractor.computeEntities', sentence, words, entities);
+    console.warn('CorpusExtractor.computeEntities', sentence, words, entities);
     if (sentence.length > 0) {
       for (const word of words) {
         const normalizedWord = Corpus.normalize(word, this.options);

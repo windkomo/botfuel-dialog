@@ -16,14 +16,14 @@ class PromptDialog extends Dialog {
    * @param {Object[]} messageEntities - entities array from user message
    */
   async execute(id, responses, messageEntities, confirmDialog) {
-    console.log('PromptDialog.execute', id, responses, messageEntities, confirmDialog);
+    console.warn('PromptDialog.execute', id, responses, messageEntities, confirmDialog);
     messageEntities = messageEntities
       .filter(entity => this.parameters.entities[entity.dim] !== undefined);
     const dialogEntities = await this.brain.conversationGet(id, this.parameters.namespace) || {};
     for (const messageEntity of messageEntities) {
       dialogEntities[messageEntity.dim] = messageEntity;
     }
-    console.log('PromptDialog.execute: dialogEntities', dialogEntities);
+    console.warn('PromptDialog.execute: dialogEntities', dialogEntities);
     await this.brain.conversationSet(id, this.parameters.namespace, dialogEntities);
     this.confirm(id, responses, messageEntities, confirmDialog);
     const missingEntities = Object
@@ -34,7 +34,7 @@ class PromptDialog extends Dialog {
   }
 
   ask(id, responses, entities) {
-    console.log('PromptDialog.ask', id, responses, entities);
+    console.warn('PromptDialog.ask', id, responses, entities);
     // TODO: put all this in a single template
     for (const entityKey of entities) {
       this.pushMessages(responses, this.textMessages(id,
@@ -44,7 +44,7 @@ class PromptDialog extends Dialog {
   }
 
   confirm(id, responses, entities, confirmDialog) {
-    console.log('PromptDialog.confirm', id, responses, entities, confirmDialog);
+    console.warn('PromptDialog.confirm', id, responses, entities, confirmDialog);
     // TODO: put all this in a single template
     if (confirmDialog) {
       this.pushMessages(responses, this.textMessages(id,

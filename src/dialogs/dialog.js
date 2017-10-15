@@ -13,7 +13,7 @@ class Dialog {
    * @param {Object} parameters the dialog parameters
    */
   constructor(config, brain, parameters) {
-    // console.log('Dialog.constructor', parameters);
+    // console.warn('Dialog.constructor', parameters);
     this.maxComplexity = Number.MAX_SAFE_INTEGER;
     this.config = config;
     this.brain = brain;
@@ -28,7 +28,7 @@ class Dialog {
    * @param {Object} parameters the template parameters
    */
   textMessages(userId, template, parameters) {
-    console.log('Dialog.textMessage', userId, template, parameters);
+    console.warn('Dialog.textMessage', userId, template, parameters);
     // TODO: resolve the template given the label (allowing fallback)
     const templateName = `${this.templatePath}/${template}.${this.config.locale}.txt`;
     return Fs

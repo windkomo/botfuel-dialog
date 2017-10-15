@@ -6,7 +6,7 @@ class CompositeEntityExtractor {
    * Constructor.
    */
   constructor(extractors) {
-    console.log('CompositeEntityExtractor.constructor', extractors);
+    console.warn('CompositeEntityExtractor.constructor', extractors);
     this.extractors = extractors;
   }
 
@@ -15,7 +15,7 @@ class CompositeEntityExtractor {
    * @param {string} sentence the sentence
    */
   async compute(sentence) {
-    console.log('CompositeEntityExtractor.compute', sentence);
+    console.warn('CompositeEntityExtractor.compute', sentence);
     let entities = [];
     for (const extractor of this.extractors) {
       // TODO: in parallel

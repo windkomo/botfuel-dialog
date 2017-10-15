@@ -20,7 +20,7 @@ class WsExtractor {
    * @param {string} sentence the sentence
    */
   async compute(sentence) {
-    // console.log('WsExtractor.compute', sentence);
+    // console.warn('WsExtractor.compute', sentence);
     const query = _.clone(this.parameters);
     _.extend(query, { sentence });
     return this.client.compute(query);

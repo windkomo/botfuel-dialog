@@ -11,7 +11,7 @@ class Nlu {
    * @param {Object} config the bot's config
    */
   constructor(config) {
-    // console.log('Nlu.constructor');
+    // console.warn('Nlu.constructor');
     this.config = config;
     this.entityExtractor = new DirectoryEntityExtractor(`${config.path}/src/extractors`);
     this.classifier = new Classifier(config);
@@ -24,7 +24,7 @@ class Nlu {
   }
 
   async init() {
-    console.log('Nlu.init');
+    console.warn('Nlu.init');
     await this.classifier.init();
   }
 
@@ -34,7 +34,7 @@ class Nlu {
    * @return {Promise} a promise with entities and intents
    */
   async compute(sentence) {
-    console.log('Nlu.compute', sentence);
+    console.warn('Nlu.compute', sentence);
     if (this.config.qna === 'before') {
       const result = await this.qnaCompute(sentence);
       if (result.entities[0].value.length !== 0) {
@@ -52,18 +52,18 @@ class Nlu {
   }
 
   async localCompute(sentence) {
-    console.log('Nlu.localCompute', sentence);
+    console.warn('Nlu.localCompute', sentence);
     const entities = await this.entityExtractor.compute(sentence);
-    console.log('Nlu.localCompute: entities', entities);
+    console.warn('Nlu.localCompute: entities', entities);
     const intents = await this.classifier.compute(sentence, entities);
-    console.log('Nlu.localCompute: intents', intents);
+    console.warn('Nlu.localCompute: intents', intents);
     return { intents, entities };
   }
 
   async qnaCompute(sentence) {
-    console.log('Nlu.qnaCompute', sentence);
+    console.warn('Nlu.qnaCompute', sentence);
     const qnas = await this.qna.getMatchingQnas({ sentence });
-    console.log('Nlu.compute: qnas', qnas);
+    console.warn('Nlu.compute: qnas', qnas);
     const intents = [{ label: 'qnas_dialog', value: 1.0 }];
     const entities = [{ dim: 'qnas', value: qnas }];
     return { intents, entities };
