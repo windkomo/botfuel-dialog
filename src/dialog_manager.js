@@ -92,8 +92,12 @@ class DialogManager {
     const user = await this.brain.getUser(userId);
     console.warn('DialogManager.executeDialogs: user', user);
     let done = true;
+    let back = false;
     while (done && dialogs.length > 0) {
-      const dialog = dialogs[dialogs.length - 1];
+      const dialog = dialogs.pop();
+      if (back) {
+        this.getDialog(dialog).getBack(userId, responses);
+      }
       console.warn('DialogManager.executeDialogs: dialog', dialog);
       // eslint-disable-next-line no-await-in-loop
       await this.brain.userSet(userId, 'lastDialog', dialog);
@@ -101,9 +105,12 @@ class DialogManager {
       done = await this
         .getDialog(dialog)
         .execute(userId, responses, entities, dialog.order !== 0);
-      if (done) {
-        dialogs = dialogs.slice(0, -1);
+      console.warn('DialogManager.executeDialogs entities:', entities);
       console.warn('DialogManager.executeDialogs: done', done);
+      if (!done) {
+        dialogs.push(dialog);
+      } else {
+        back = true;
       }
     }
     await this.brain.userSet(userId, 'dialogs', dialogs);

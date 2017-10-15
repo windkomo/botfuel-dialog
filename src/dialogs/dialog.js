@@ -49,6 +49,8 @@ class Dialog {
   pushMessage(responses, message) {
     responses.push(message);
   }
+
+  getBack() {}
 }
 
 module.exports = Dialog;

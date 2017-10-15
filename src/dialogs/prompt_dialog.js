@@ -56,6 +56,10 @@ class PromptDialog extends Dialog {
                                                      { entity }));
     }
   }
+
+  getBack(id, responses) {
+    this.pushMessages(responses, this.textMessages(id,`${this.parameters.namespace}_goback`,{}));
+  }
 }
 
 module.exports = PromptDialog;
