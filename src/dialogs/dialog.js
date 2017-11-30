@@ -34,6 +34,7 @@ class Dialog {
   static STATUS_DISCARDED = 'discarded';
   static STATUS_READY = 'ready';
   static STATUS_WAITING = 'waiting';
+  static STATUS_CANCELLED = 'cancelled';
 
   /**
    * Indicates that this dialog cannot be processed.
@@ -59,6 +60,11 @@ class Dialog {
    * Indicates that this dialog is waiting for a user confirmation to be unblocked.
    */
   get STATUS_WAITING() { return Dialog.STATUS_WAITING; }
+
+  /**
+   * Indicates that this dialog is waiting for a user confirmation to be unblocked.
+   */
+  get STATUS_CANCELLED() { return Dialog.STATUS_CANCELLED; }
 
   /**
    * @constructor

@@ -19,6 +19,8 @@ const logger = require('logtown')('DialogManager');
 const Dialog = require('./dialogs/dialog');
 const { DialogError } = require('./errors');
 
+const hasProperty = (obj, property) => Object.hasOwnProperty.call(obj, property);
+
 /**
  * The dialog manager turns NLU output into a dialog stack.
  *
@@ -70,7 +72,7 @@ class DialogManager {
   getDialog(dialog) {
     logger.debug('getDialog', dialog);
     // @TODO: here we can have intents or dialogs, the method name is really confusing
-    if (Object.hasOwnProperty.call(dialog, 'label') && !Object.hasOwnProperty.call(dialog, 'name')) {
+    if (hasProperty(dialog, 'label') && !hasProperty(dialog, 'name')) {
       dialog.name = dialog.label;
     }
     const path = this.getDialogPath(dialog.name);
@@ -153,19 +155,28 @@ class DialogManager {
    * @returns {void}
    */
   updateWithIntents(userId, dialogs, intents, entities) {
-    logger.debug('updateWithIntents', userId, dialogs, intents, entities);
+    logger.info('updateWithIntents', userId, dialogs, intents, entities);
     intents = this.filterIntents(intents);
-    logger.debug('updateWithIntents: intents', intents);
+    logger.info('updateWithIntents: intents', intents);
     let nb = 0;
     const newDialogs = [];
     for (let i = 0; i < intents.length; i++) {
       const intent = intents[i];
-      if (this.getDialog(intent).characteristics.reentrant) {
-        nb++;
+      if (intent.sentiment < 0) {
+        // if sentiment is less than 0 then we assume
+        // that we want to cancel an existing dialog
+        dialogs.stack = dialogs.stack.map(dialog => (
+          dialog.name === intent.label ? { ...dialog, status: Dialog.STATUS_CANCELLED } : dialog
+        ));
+        logger.info('updateWithIntents: negative sentiment', dialogs);
+      } else {
+        if (intent.sentiment >= 0 && this.getDialog(intent).characteristics.reentrant) {
+          nb++;
+        }
+        const status = nb > 1 ? Dialog.STATUS_BLOCKED : Dialog.STATUS_READY;
+        const name = intent.name;
+        newDialogs.push({ name, entities, status });
       }
-      const status = nb > 1 ? Dialog.STATUS_BLOCKED : Dialog.STATUS_READY;
-      const name = intent.name;
-      newDialogs.push({ name, entities, status });
     }
     this.updateWithDialogs(userId, dialogs, newDialogs, entities);
   }
@@ -222,7 +233,12 @@ class DialogManager {
       .execute(adapter, userId, dialog.entities, dialog.status);
     logger.debug('execute: dialogResult', dialogResult);
     const status = dialogResult.status || Dialog.STATUS_COMPLETED;
-    if (status === Dialog.STATUS_DISCARDED || status === Dialog.STATUS_COMPLETED) {
+    const removeDialogStatuses = [
+      Dialog.STATUS_DISCARDED,
+      Dialog.STATUS_COMPLETED,
+      Dialog.STATUS_CANCELLED,
+    ];
+    if (removeDialogStatuses.indexOf(status) !== -1) {
       dialogs.stack = dialogs.stack.slice(0, -1);
       dialogs.previous.push({
         name: dialog.name,

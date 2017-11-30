@@ -33,6 +33,8 @@ class PromptView extends View {
         return this.renderConfirm();
       case 'discard':
         return this.renderDiscard();
+      case 'cancel':
+        return this.renderCancel();
       case 'entities': {
         const { matchedEntities, missingEntities } = data;
         return this.renderEntities(matchedEntities, missingEntities);
@@ -67,6 +69,15 @@ class PromptView extends View {
    */
   renderDiscard() {
     return [new BotTextMessage('dialog discarded.')];
+  }
+
+  /**
+   * Cancels the dialog.
+   * @private
+   * @returns {Object[]} the bot messages
+   */
+  renderCancel() {
+    return [new BotTextMessage('dialog cancelled.')];
   }
 
   /**

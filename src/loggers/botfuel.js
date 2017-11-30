@@ -34,6 +34,7 @@ const options = { exitOnError: false };
 module.exports = {
   wrapper: new WinstonWrapper(transports, options),
   config: {
+    disable: ['debug'],
     namespaces: {
       Brain: {
         disable: ['debug'],

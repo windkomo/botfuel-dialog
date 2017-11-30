@@ -19,6 +19,7 @@ const dir = require('node-dir');
 const Qna = require('botfuel-qna-sdk');
 const Spellchecking = require('botfuel-nlp-sdk').Spellchecking;
 const logger = require('logtown')('Nlu');
+const sentiment = require('sentiment');
 const { AuthenticationError } = require('./errors');
 const Classifier = require('./classifier');
 const BooleanExtractor = require('./extractors/boolean-extractor');
@@ -129,7 +130,9 @@ class Nlu {
     logger.debug('localCompute: entities', entities);
     const intents = await this.classifier.compute(sentence, entities);
     logger.debug('localCompute: intents', intents);
-    return { intents, entities };
+    const { score } = sentiment(sentence);
+    // map sentiment score to intents
+    return { intents: intents.map(i => ({ ...i, sentiment: score })), entities };
   }
 
   /**

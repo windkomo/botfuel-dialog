@@ -279,6 +279,17 @@ class PromptDialog extends Dialog {
     return { status: this.STATUS_COMPLETED };
   }
 
+  /**
+   * Executes the dialog when status is cancelled
+   * @param {Adapter} adapter - the adapter
+   * @param {String} userId - the user id
+   * @returns {Promise.<Object>}
+   */
+  async executeWhenCancelled(adapter, userId) {
+    await this.display(adapter, userId, 'cancel');
+    return { status: this.STATUS_CANCELLED };
+  }
+
   /** @inheritdoc */
   async execute(adapter, userId, candidates, status) {
     logger.debug('execute', userId, candidates, status);
@@ -287,6 +298,8 @@ class PromptDialog extends Dialog {
         return this.executeWhenBlocked(adapter, userId, candidates);
       case this.STATUS_WAITING:
         return this.executeWhenWaiting(adapter, userId, candidates);
+      case this.STATUS_CANCELLED:
+        return this.executeWhenCancelled(adapter, userId);
       default:
         return this.executeWhenReady(adapter, userId, candidates);
     }
