@@ -177,10 +177,16 @@ class PromptDialog extends Dialog {
             newValue,
             remainingCandidates,
           });
-          const isFulfilled = dialogParameter.isFulfilled(newValue, { dialogEntities });
+          const newDialogEntities = {
+            ...matchedEntities,
+            [name]: newValue,
+          };
+          const isFulfilled = dialogParameter.isFulfilled(newValue, {
+            dialogEntities: newDialogEntities,
+          });
           return {
             // Store the found entities here as a { <entityName>: <entity> } map
-            matchedEntities: { ...matchedEntities, [name]: newValue },
+            matchedEntities: newDialogEntities,
             remainingCandidates: newRemainingCandidates,
             // If an entity matching the one we are expecting was found,
             // remove it from missing entities
