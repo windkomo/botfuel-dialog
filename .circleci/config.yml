@@ -30,6 +30,7 @@ jobs:
 
     steps:
       - checkout
+      - run: sudo yarn global add lerna
       - run: yarn test
       - run: yarn run style
       - run: bash <(curl -s https://codecov.io/bash)
