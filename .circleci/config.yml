@@ -1,7 +1,6 @@
 version: 2
 jobs:
   build:
-    parallelism: 4
     docker:
       - image: circleci/node:8.9.4
       
@@ -25,7 +24,6 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
         
   test:
-    parallelism: 4
     docker:
       - image: circleci/node:8.9.4
       - image: mongo:3.4.5
