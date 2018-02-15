@@ -17,6 +17,7 @@ jobs:
           - v1-dependencies-
 
       - run: yarn install
+      - run: sudo yarn global add lerna
 
       - save_cache:
           paths:
@@ -30,7 +31,6 @@ jobs:
 
     steps:
       - checkout
-      - run: sudo yarn global add lerna
       - run: yarn test
       - run: yarn run style
       - run: bash <(curl -s https://codecov.io/bash)
